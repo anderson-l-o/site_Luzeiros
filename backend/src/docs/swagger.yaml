@@ -1,0 +1,13 @@
+openapi: 3.0.0
+info:
+  title: Aventureiros API
+  version: "1.0.0"
+servers:
+  - url: /api
+paths:
+  /auth/login:
+    post:
+      summary: Login
+  /auth/register:
+    post:
+      summary: Register
