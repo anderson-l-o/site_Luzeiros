@@ -2,8 +2,8 @@ import { User, AchievementType } from "../src/sequelize.js";
 import { hashPassword } from "../src/services/authService.js";
 
 export default async function run() {
-  const adminEmail = process.env.SEED_ADMIN_EMAIL || "admin@aventureiros.com";
-  const adminPass = process.env.SEED_ADMIN_PASSWORD || "123456";
+  const adminEmail = process.env.SEED_ADMIN_EMAIL;
+  const adminPass = process.env.SEED_ADMIN_PASSWORD;
   const exists = await User.findOne({ where: { email: adminEmail } });
   if (!exists) {
     const passwordHash = hashPassword(adminPass);

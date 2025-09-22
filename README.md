@@ -11,3 +11,4 @@ Endpoints:
 - Admin seeded: admin@aventureiros.com / 123456
 
 If any service fails, paste here the last ~100 lines of `docker-compose up` logs and I'll analyze.
+# site_Luzeiros
