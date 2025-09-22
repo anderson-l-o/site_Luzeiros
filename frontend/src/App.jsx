@@ -33,6 +33,7 @@ export default function App() {
             <Route path="/admin" element={<Protected role="admin"><Admin/></Protected>}/>
             <Route path="/cadastro-usuario" element={<Protected role="admin"><CadastroUsuario/></Protected>}/>
             <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login />} />
           </Routes>          
         </BrowserRouter>
       </AuthProvider>
