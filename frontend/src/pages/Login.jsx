@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../auth/context.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Section,
   Card,
@@ -129,6 +129,21 @@ export default function Home() {
                 ? "Entrar"
                 : "Registrar"}
             </Button>
+
+            {mode === "login" && (
+              <div style={{ textAlign: "center", marginTop: "10px" }}>
+                <Link
+                  to="/forgot-password"
+                  style={{
+                    color: "#007bff",
+                    textDecoration: "none",
+                    fontSize: "14px"
+                  }}
+                >
+                  Esqueci minha senha
+                </Link>
+              </div>
+            )}
           </form>
         </Card>
       ) : (

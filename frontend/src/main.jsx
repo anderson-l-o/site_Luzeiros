@@ -1,4 +1,13 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App.jsx";
-createRoot(document.getElementById("root")).render(<App />);
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import './styles/GlobalStyles.jsx'
+import { ToastProvider } from './components/ToastContext'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+	<React.StrictMode>
+		<ToastProvider>
+			<App />
+		</ToastProvider>
+	</React.StrictMode>
+)

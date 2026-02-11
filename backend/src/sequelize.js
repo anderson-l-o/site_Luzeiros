@@ -33,7 +33,11 @@ const User = sequelize.define(
     },
     cpf: {type: DataTypes.STRING(14), allowNull: true},
     nickname: {type: DataTypes.STRING(30), allowNull: true},
-    phone: {type: DataTypes.STRING(64), allowNull: true  },    
+    phone: {type: DataTypes.STRING(64), allowNull: true},
+    resetToken: { type: DataTypes.STRING, allowNull: true },
+    resetExpires: { type: DataTypes.DATE, allowNull: true },
+    lastLogin: { type: DataTypes.DATE, allowNull: true },
+    isActive: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
   },
   { tableName: "users", timestamps: true }
 );

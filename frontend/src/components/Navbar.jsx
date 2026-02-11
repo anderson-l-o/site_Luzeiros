@@ -145,18 +145,25 @@ export default function Navbar() {
                 <NavLink to="/conquistas" onClick={handleLinkClick}>
                   Conquistas
                 </NavLink>
-                <NavLink to="/admin" onClick={handleLinkClick}>
-                  Admin
+                <NavLink to="/perfil" onClick={handleLinkClick}>
+                  Meu Perfil
                 </NavLink>
-                <NavLink to="/cadastro-usuario" onClick={handleLinkClick}>
-                  Cadastro de Usuário
-                </NavLink>
-                <NavLink to="/cadastro-atividades" onClick={handleLinkClick}>
-                  Cadastro de Atividades
-                </NavLink>
-                <NavLink to="/niveis" onClick={handleLinkClick}>
-                  Níveis
-                </NavLink>
+                {user.role === "admin" && (
+                  <>
+                    <NavLink to="/admin" onClick={handleLinkClick}>
+                      Admin
+                    </NavLink>
+                    <NavLink to="/cadastro-usuario" onClick={handleLinkClick}>
+                      Cadastro de Usuário
+                    </NavLink>
+                    <NavLink to="/cadastro-atividades" onClick={handleLinkClick}>
+                      Cadastro de Atividades
+                    </NavLink>
+                    <NavLink to="/niveis" onClick={handleLinkClick}>
+                      Níveis
+                    </NavLink>
+                  </>
+                )}
               </DropdownMenu>
             </DropdownWrapper>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import { tema } from "./styles/theme.js";
 import { GlobalStyles } from "./styles/GlobalStyles.jsx";
@@ -10,6 +10,9 @@ import { AuthProvider, useAuth } from "./auth/context.jsx";
 import Admin from "./pages/Admin.jsx";
 import Login from "./pages/Login.jsx";
 import CadastroUsuario from "./pages/CadastroUsuario.jsx";
+import Perfil from "./pages/Perfil.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 
 
@@ -32,8 +35,10 @@ export default function App() {
             <Route path="/conquistas" element={<Conquistas />} />
             <Route path="/admin" element={<Protected role="admin"><Admin/></Protected>}/>
             <Route path="/cadastro-usuario" element={<Protected role="admin"><CadastroUsuario/></Protected>}/>
+            <Route path="/perfil" element={<Protected><Perfil/></Protected>}/>
             <Route path="/login" element={<Login />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Routes>          
         </BrowserRouter>
       </AuthProvider>

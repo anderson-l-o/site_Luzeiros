@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (_req, res) =>
+app.get("/api", (_req, res) =>
   res.json({ status: "ok", service: "Aventureiros API" })
 );
 

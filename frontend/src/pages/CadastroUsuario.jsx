@@ -9,7 +9,9 @@ import {
   Title,
   List,
   ListItem,
+  Label,
 } from "../styles/components";
+import { useAuth } from "../auth/context";
 
 export default function CadastroUsuario() {
   const [list, setList] = useState([]);
@@ -21,9 +23,29 @@ export default function CadastroUsuario() {
     phone: "",
     nickname: "",
     email: "",
-    passwordHash: "",
+    password: "",
     role: "member",
   });
+
+  const [focus, setFocus] = useState({
+    name: "",
+    cpf: "",
+    type: "",
+    phone: "",
+    nickname: "",
+    email: "",
+    password: "",
+    role: "member",
+  });
+
+  const { user, logout } = useAuth();
+
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  const handleFocus = (name) => setFocus({ ...focus, [name]: true });
+  const handleBlur = (name) => setFocus({ ...focus, [name]: false });
 
   async function load() {
     const res = await api.get("/users");
@@ -56,7 +78,7 @@ export default function CadastroUsuario() {
         phone: "",
         nickname: "",
         email: "",
-        passwordHash: "",
+        password: "",
         role: "member",
       });
       await load();
@@ -65,7 +87,7 @@ export default function CadastroUsuario() {
       alert("Erro ao salvar usuário");
     }
   }
-
+  
   return (
     <Section>
       <Card>
@@ -73,65 +95,89 @@ export default function CadastroUsuario() {
         <form onSubmit={submit}>
           <InputWrapper>
             <Input
-              placeholder="Nome"
+              name="name"
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              onChange={handleChange}
+              onFocus={() => handleFocus("name")}
+              onBlur={() => handleBlur("name")}
+              //onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
             />
+            <Label active={focus.name || form.name}>Nome</Label>
           </InputWrapper>
           <InputWrapper>
             <Input
-              placeholder="Senha"
+              name="password"
               type="password"
-              value={form.passwordHash}
-              onChange={(e) =>
-                setForm({ ...form, passwordHash: e.target.value })
-              }
-              required={!form.id_usuario} // só exige senha ao criar
+              value={form.password}
+              onChange={handleChange}
+              onFocus={() => handleFocus("password")}
+              onBlur={() => handleBlur("password")}
+              required
             />
+            <Label active={focus.password || form.password}>Senha</Label>
           </InputWrapper>
           <InputWrapper>
             <Input
-              placeholder="E-mail"
+              name="email"
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              
+              onChange={handleChange}
+              onFocus={() => handleFocus("email")}
+              onBlur={() => handleBlur("email")}
+              required
             />
+            <Label active={focus.email || form.email}> E-mail</Label>
           </InputWrapper>
           <InputWrapper>
             <Input
-              placeholder="CPF/RG"
+              name="cpf"
               value={form.cpf}
-              onChange={(e) => setForm({ ...form, cpf: e.target.value })}
+              onChange={handleChange}
+              onFocus={() => handleFocus("cpf")}
+              onBlur={() => handleBlur("cpf")}
             />
+            <Label active={focus.cpf || form.cpf}> CPF/RG</Label>
           </InputWrapper>
           <InputWrapper>
             <Input
-              placeholder="Tipo"
+              name="type"
               value={form.type}
-              onChange={(e) => setForm({ ...form, type: e.target.value })}
+              onChange={handleChange}
+              onFocus={() => handleFocus("type")}
+              onBlur={() => handleBlur("type")}
             />
+            <Label active={focus.type || form.type}>Tipo</Label>
           </InputWrapper>
           <InputWrapper>
             <Input
-              placeholder="Telefone"
+              name="phone"
               value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              onChange={handleChange}
+              onFocus={() => handleFocus("phone")}
+              onBlur={() => handleBlur("phone")}
             />
+            <Label active={focus.phone || form.phone}>Telefone</Label>
           </InputWrapper>
           <InputWrapper>
             <Input
-              placeholder="Apelido"
+              name="nickname"
               value={form.nickname}
-              onChange={(e) => setForm({ ...form, nickname: e.target.value })}
+              onChange={handleChange}
+              onFocus={() => handleFocus("nickname")}
+              onBlur={() => handleBlur("nickname")}
             />
+            <Label active={focus.nickname || form.nickname}>Apelido</Label>
           </InputWrapper>
           <InputWrapper>
             <Input
               placeholder="Função"
+              name="role"
               value={form.role || "member"}
-              onChange={(e) => setForm({ ...form, role: e.target.value  })}
+              onChange={handleChange}
+              onFocus={() => handleFocus("role")}
+              onBlur={() => handleBlur("role")}
             />
+            <Label active={focus.role || form.role}>Função</Label>
           </InputWrapper>
 
           <Button type="submit">
@@ -150,7 +196,7 @@ export default function CadastroUsuario() {
                   nickname: "",
                   email: "",
                   passwordHash: "",
-                  role:"",
+                  role: "",
                 })
               }
               style={{ marginLeft: "10px" }}
@@ -160,50 +206,52 @@ export default function CadastroUsuario() {
           )}
         </form>
 
-        <List>
-          {list.map((u) => (
-            <ListItem key={u.id_usuario || u.id}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  {u.name} ({u.type}) — {u.phone} - {u.nickname} - {u.role}
+        {user.role === "admin" && (
+          <List>
+            {list.map((u) => (
+              <ListItem key={u.id_usuario || u.id}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    {u.name} ({u.type}) — {u.phone} - {u.nickname} - {u.role} - {u.password} - {u.passwordHash}
+                  </div>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <Button
+                      onClick={() =>
+                        setForm({
+                          id_usuario: u.id_usuario || u.id,
+                          name: u.name,
+                          cpf: u.cpf,
+                          type: u.type,
+                          phone: u.phone,
+                          nickname: u.nickname,
+                          email: u.email,
+                          password: u.password,                          
+                          role: u.role,
+                        })
+                      }
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        await api.delete("/users/" + (u.id_usuario || u.id));
+                        load();
+                      }}
+                    >
+                      Excluir
+                    </Button>
+                  </div>
                 </div>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <Button
-                    onClick={() =>
-                      setForm({
-                        id_usuario: u.id_usuario || u.id,
-                        name: u.name,
-                        cpf: u.cpf,
-                        type: u.type,
-                        phone: u.phone,
-                        nickname: u.nickname,
-                        email: u.email,
-                        passwordHash: "", // não exibir senha
-                        role: u.role,
-                      })
-                    }
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    onClick={async () => {
-                      await api.delete("/users/" + (u.id_usuario || u.id));
-                      load();
-                    }}
-                  >
-                    Excluir
-                  </Button>
-                </div>
-              </div>
-            </ListItem>
-          ))}
-        </List>
+              </ListItem>
+            ))}
+          </List>
+        )}
       </Card>
     </Section>
   );
