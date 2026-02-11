@@ -6,7 +6,51 @@ import {
   Section,
   Card,
   Title,
+  Button,
 } from "../styles/components";
+import { useNavigate } from "react-router-dom";
+
+const WelcomeContainer = styled(Section)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  text-align: center;
+`;
+
+const WelcomeCard = styled(Card)`
+  padding: 40px 32px;
+  max-width: 500px;
+  background: linear-gradient(135deg, ${props => props.theme.primaryColor}10 0%, ${props => props.theme.primaryColor}05 100%);
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    color: ${props => props.theme.primaryColor};
+  }
+
+  p {
+    font-size: 16px;
+    color: #666;
+    margin: 12px 0;
+    line-height: 1.6;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      min-width: 200px;
+    }
+  }
+`;
 
 const StatsGrid = styled.div`
   display: grid;
@@ -137,6 +181,7 @@ const EmptyState = styled.div`
 
 export default function Home() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [recent, setRecent] = useState([]);
   const [ranking, setRanking] = useState([]);
@@ -162,14 +207,44 @@ export default function Home() {
       }
     }
 
-    loadData();
-  }, []);
+    // Só carrega dados se estiver logado
+    if (user) {
+      loadData();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
+  // Tela de boas-vindas (não logado)
+  if (!user) {
+    return (
+      <WelcomeContainer>
+        <WelcomeCard>
+          <h1>🌟 Clube dos Luzeiros</h1>
+          <p>Bem-vindo ao Sistema de Rastreamento de Conquistas</p>
+          <p style={{ fontSize: "14px", color: "#999", marginTop: "24px" }}>
+            Acesse sua conta para registrar suas conquistas e acompanhar seu progresso no clube.
+          </p>
+          <div className="buttons">
+            <Button onClick={() => navigate("/login")}>Entrar</Button>
+            <Button 
+              style={{ background: "transparent", borderColor: "currentColor" }} 
+              onClick={() => navigate("/login")}
+            >
+              Sobre
+            </Button>
+          </div>
+        </WelcomeCard>
+      </WelcomeContainer>
+    );
+  }
+
+  // Dashboard (logado)
   if (loading) {
     return (
       <Section>
-        <Title>Bem-vindo ao Clube dos Luzeiros</Title>
-        <LoadingText>Carregando estatísticas...</LoadingText>
+        <Title>Carregando Dashboard...</Title>
+        <LoadingText>Aguarde um momento</LoadingText>
       </Section>
     );
   }
