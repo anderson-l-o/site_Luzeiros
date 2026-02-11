@@ -2,25 +2,28 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../auth/context.jsx";
 import api from "../lib/api.js";
-import { Section, Card } from "../styles/components";
-import Titulo from "../styles/Titulo.jsx";
+import {
+  Section,
+  Card,
+  Title,
+} from "../styles/components";
 
-const StatsContainer = styled.div`
+const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 32px;
 `;
 
 const StatCard = styled(Card)`
   text-align: center;
-  padding: 24px;
-  background: linear-gradient(135deg, ${props => props.theme.primaryColor}20 0%, ${props => props.theme.primaryColor}05 100%);
+  padding: 20px;
+  background: linear-gradient(135deg, ${props => props.theme.primaryColor}15 0%, ${props => props.theme.primaryColor}05 100%);
   border: 1px solid ${props => props.theme.primaryColor}30;
 
   h3 {
     color: ${props => props.theme.primaryColor};
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -50,17 +53,19 @@ const RecentItem = styled.div`
   .user-name {
     font-weight: 600;
     color: ${props => props.theme.textColor};
+    font-size: 14px;
   }
 
   .achievement-name {
     color: ${props => props.theme.primaryColor};
-    font-size: 14px;
+    font-size: 13px;
     margin-top: 4px;
+    font-weight: 500;
   }
 
   .date {
     color: #999;
-    font-size: 12px;
+    font-size: 11px;
     margin-top: 4px;
   }
 `;
@@ -72,18 +77,19 @@ const RankingTable = styled.table`
 
   th {
     background: ${props => props.theme.primaryColor}15;
-    padding: 12px;
+    padding: 10px 12px;
     text-align: left;
     font-weight: 600;
     color: ${props => props.theme.primaryColor};
     border-bottom: 2px solid ${props => props.theme.primaryColor}30;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
   }
 
   td {
-    padding: 12px;
+    padding: 10px 12px;
     border-bottom: 1px solid ${props => props.theme.primaryColor}15;
+    font-size: 14px;
 
     &:first-child {
       font-weight: 600;
@@ -98,6 +104,11 @@ const RankingTable = styled.table`
     &.points {
       color: ${props => props.theme.primaryColor};
       font-weight: 600;
+      text-align: right;
+    }
+
+    &.achievements {
+      text-align: right;
     }
   }
 
@@ -109,7 +120,19 @@ const RankingTable = styled.table`
 const LoadingText = styled.p`
   color: #999;
   text-align: center;
-  padding: 32px 0;
+  padding: 24px 0;
+  font-size: 14px;
+`;
+
+const EmptyState = styled.div`
+  text-align: center;
+  padding: 32px 16px;
+  color: #999;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
 `;
 
 export default function Home() {
@@ -145,7 +168,7 @@ export default function Home() {
   if (loading) {
     return (
       <Section>
-        <Titulo>Bem-vindo ao Clube dos Luzeiros</Titulo>
+        <Title>Bem-vindo ao Clube dos Luzeiros</Title>
         <LoadingText>Carregando estatísticas...</LoadingText>
       </Section>
     );
@@ -155,11 +178,11 @@ export default function Home() {
 
   return (
     <Section>
-      <Titulo>Bem-vindo, {displayName}! 🌟</Titulo>
+      <Title>Bem-vindo, {displayName}! 🌟</Title>
 
       {/* Estatísticas Gerais */}
       {stats && (
-        <StatsContainer>
+        <StatsGrid>
           <StatCard>
             <h3>Usuários Ativos</h3>
             <p className="value">{stats.totalUsers}</p>
@@ -172,12 +195,14 @@ export default function Home() {
             <h3>Média por Usuário</h3>
             <p className="value">{stats.avgAchievementsPerUser}</p>
           </StatCard>
-        </StatsContainer>
+        </StatsGrid>
       )}
 
       {/* Conquistas Recentes */}
       <Card>
-        <Titulo style={{ fontSize: "18px", marginTop: 0 }}>Conquistas Recentes</Titulo>
+        <Title style={{ fontSize: "16px", marginTop: 0, marginBottom: "12px" }}>
+          Conquistas Recentes
+        </Title>
         {recent.length > 0 ? (
           <RecentList>
             {recent.map((ach) => (
@@ -195,15 +220,17 @@ export default function Home() {
             ))}
           </RecentList>
         ) : (
-          <LoadingText>Nenhuma conquista registrada ainda</LoadingText>
+          <EmptyState>
+            <p>Nenhuma conquista registrada ainda</p>
+          </EmptyState>
         )}
       </Card>
 
       {/* Ranking */}
       <Card style={{ marginTop: "24px" }}>
-        <Titulo style={{ fontSize: "18px", marginTop: 0 }}>
+        <Title style={{ fontSize: "16px", marginTop: 0, marginBottom: "12px" }}>
           🏆 Ranking Top 10
-        </Titulo>
+        </Title>
         {ranking.length > 0 ? (
           <RankingTable>
             <thead>
@@ -215,20 +242,20 @@ export default function Home() {
               </tr>
             </thead>
             <tbody>
-              {ranking.map((user) => (
-                <tr key={user.id}>
-                  <td>#{user.rank}</td>
-                  <td className="name">{user.nickname || user.name}</td>
-                  <td style={{ textAlign: "right" }}>{user.totalAchievements}</td>
-                  <td className="points" style={{ textAlign: "right" }}>
-                    {user.totalPoints}
-                  </td>
+              {ranking.map((userRank) => (
+                <tr key={userRank.id}>
+                  <td>#{userRank.rank}</td>
+                  <td className="name">{userRank.nickname || userRank.name}</td>
+                  <td className="achievements">{userRank.totalAchievements}</td>
+                  <td className="points">{userRank.totalPoints}</td>
                 </tr>
               ))}
             </tbody>
           </RankingTable>
         ) : (
-          <LoadingText>Nenhum ranking disponível</LoadingText>
+          <EmptyState>
+            <p>Nenhum ranking disponível</p>
+          </EmptyState>
         )}
       </Card>
     </Section>
