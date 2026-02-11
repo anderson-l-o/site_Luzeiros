@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.js";
 import typeRoutes from "./routes/achievementTypes.js";
 import achRoutes from "./routes/achievements.js";
 import userRoutes from "./routes/users.js";
+import statsRoutes from "./routes/stats.js";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
@@ -30,6 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/achievement-types", typeRoutes);
 app.use("/api/achievements", achRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/stats", statsRoutes);
 
 const PORT = process.env.PORT || 5000;
 
